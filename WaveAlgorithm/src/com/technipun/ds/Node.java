@@ -11,13 +11,13 @@ import java.util.Iterator;
 public class Node {
 
 	// Integer variable for unique nodeID
-	private int nodeID;
+	public int nodeID;
 
 	// Pointer to parent Node
 	private Node parent;
 
 	// Array List carrying the pointers to the child nodes
-	private ArrayList<Node> neigh;
+	protected ArrayList<Node> neigh;
 	
 	public Node() {
 		this.neigh = new ArrayList<Node>();
