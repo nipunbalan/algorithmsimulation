@@ -18,6 +18,10 @@ public class Node {
 
 	// Array List carrying the pointers to the child nodes
 	private ArrayList<Node> neigh;
+	
+	public Node() {
+		this.neigh = new ArrayList<Node>();
+	}
 
 	// Constructor takes the nodeID and creates an empty ArrayList to store
 	// children.
