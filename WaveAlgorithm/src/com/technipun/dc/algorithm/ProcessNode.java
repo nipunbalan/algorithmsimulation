@@ -14,6 +14,8 @@ public class ProcessNode extends Node {
 	private ArrayList<ReceiveIndicator> receiveVector;
 
 	private MessageQueue messageQueue;
+	
+	private enum status{WAITING,HAS_SILENT_NEIGH,SEND_TOKEN,DECIDED};
 
 	public void addMessage(Message msg) {
 		messageQueue.add(msg);
@@ -85,7 +87,6 @@ public class ProcessNode extends Node {
 				try {
 					wait(10);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -96,4 +97,5 @@ public class ProcessNode extends Node {
 				+ "] found its silent neighbour:Process Node["+silentNeigh.nodeID+"]");
 		send(silentNeigh,MessageType.TOKEN);
 	}
+	
 }
