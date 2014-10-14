@@ -1,24 +1,23 @@
 package com.technipun.dc.algorithm;
 
-import com.technipun.ds.Node;
 
 public class MessageHeader {
 	
 	
-	private Node sender;
-	private Node receiver;
+	private ProcessNode sender;
+	private ProcessNode receiver;
 	private MessageType msgType;
 	
-	public Node getSender() {
+	public ProcessNode getSender() {
 		return sender;
 	}
-	public void setSender(Node sender) {
+	public void setSender(ProcessNode sender) {
 		this.sender = sender;
 	}
-	public Node getReceiver() {
+	public ProcessNode getReceiver() {
 		return receiver;
 	}
-	public void setReceiver(Node receiver) {
+	public void setReceiver(ProcessNode receiver) {
 		this.receiver = receiver;
 	}
 	

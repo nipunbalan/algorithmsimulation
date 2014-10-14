@@ -1,67 +1,54 @@
 package com.technipun.ds;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Queue;
 
-public class  MessageQueue<E>  implements Queue {
+import com.technipun.dc.algorithm.Message;
 
+public class MessageQueue {
 
-	@Override
+	private ArrayList<Message> messageQue;
+
 	public void clear() {
-		// TODO Auto-generated method stub
-		
+		messageQue.clear();
 	}
 
-
-	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return messageQue.isEmpty();
 	}
 
+	public void remove(Object o) {
 
-	@Override
-	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
-		return false;
+		Iterator<Message> msgQueItr = messageQue.iterator();
+		while (msgQueItr.hasNext()) {
+			Message msg = msgQueItr.next();
+			if (msg == o) {
+				msgQueItr.remove();
+			}
+		}
 	}
 
-	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return messageQue.size();
 	}
 
-
-	@Override
-	public boolean add(Object e) {
-		// TODO Auto-generated method stub
-		return false;
+	public void add(Message e) {
+		messageQue.add(e);
 	}
 
-	public Object next() {
-		// TODO Auto-generated method stub
-		return null;
+	public Message poll() {
+		if (!messageQue.isEmpty()) {
+			Message msg = messageQue.get(0);
+			messageQue.remove(0);
+			return msg;
+		} else {
+			return null;
+		}
 	}
 
-
-	@Override
-	public Object peek() {
-		// TODO Auto-generated method stub
-		return null;
+	public void remove() {
+		if (!messageQue.isEmpty()) {
+			messageQue.remove(0);
+		}
 	}
-
-	@Override
-	public Object poll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Object remove() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

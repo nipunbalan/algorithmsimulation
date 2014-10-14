@@ -2,7 +2,7 @@ package com.technipun.dc.algorithm;
 
 public class Message {
 	
-	private MessageHeader header= new MessageHeader();
+	protected MessageHeader header= new MessageHeader();
 	
 	/**
 	 * @return the header
@@ -32,6 +32,11 @@ public class Message {
 	 */
 	public void setMessage(Object message) {
 		this.message = message;
+	}
+	
+	public void send()
+	{
+		this.header.getReceiver().addMessage(this);
 	}
 	
 }
