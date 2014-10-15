@@ -8,6 +8,11 @@ import com.technipun.dc.algorithm.Message;
 public class MessageQueue {
 
 	private ArrayList<Message> messageQue;
+	
+	public  MessageQueue()
+	{
+		messageQue = new ArrayList<Message>();
+	}
 
 	public void clear() {
 		messageQue.clear();

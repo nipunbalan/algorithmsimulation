@@ -18,7 +18,7 @@ public class Node {
 
 	// Array List carrying the pointers to the child nodes
 	protected ArrayList<Node> neigh;
-	
+
 	public Node() {
 		this.neigh = new ArrayList<Node>();
 	}
@@ -50,32 +50,39 @@ public class Node {
 		this.nodeID = nodeID;
 	}
 
-	//Getter for parent
+	// Getter for parent
 	public Node getParent() {
 		return this.parent;
 	}
 
-	//Method to add child node to a node
+	// Method to add child node to a node
 	public void addNeigh(Node newNeigh) {
-		//Adding a new element to the ArrayList "children"
-		this.neigh.add(newNeigh);
-		newNeigh.setParent(this);
+		// Adding a new element to the ArrayList "children"
+		if (!isNeighbour(newNeigh)) {
+			this.neigh.add(newNeigh);
+			newNeigh.addNeigh(this);
+			newNeigh.setParent(this);
+		}
+
+		
 	}
 
-	//Method to remove all child nodes.
+	// Method to remove all child nodes.
 	public void removeAllNeighbours() {
-		//Iterating through the child list and removing the reference to its parents
+		// Iterating through the child list and removing the reference to its
+		// parents
 		Iterator<Node> neighItr = neigh.iterator();
 		while (neighItr.hasNext()) {
 			neighItr.next().setParent(null);
 		}
-		//Clearing the Arraylist "children" to remove all children"
+		// Clearing the Arraylist "children" to remove all children"
 		this.neigh.clear();
 	}
 
-	//Method to remove a particular child referenced by nodeID
+	// Method to remove a particular child referenced by nodeID
 	public void removeNeigh(int rmNodeID) {
-		//Iterator to check the nodeID in the children Array List and to delete the node if the ID matches
+		// Iterator to check the nodeID in the children Array List and to delete
+		// the node if the ID matches
 		Iterator<Node> neighItr = neigh.iterator();
 		while (neighItr.hasNext()) {
 			Node currNode = neighItr.next();
@@ -88,6 +95,17 @@ public class Node {
 
 	private void setParent(Node parent) {
 		this.parent = parent;
+	}
+
+	private boolean isNeighbour(Node node) {
+		Iterator<Node> neighItr = neigh.iterator();
+		while (neighItr.hasNext()) {
+			Node currNode = neighItr.next();
+			if (currNode == node) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

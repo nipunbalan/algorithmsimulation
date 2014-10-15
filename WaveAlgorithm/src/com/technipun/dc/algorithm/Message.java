@@ -2,7 +2,13 @@ package com.technipun.dc.algorithm;
 
 public class Message {
 	
-	protected MessageHeader header= new MessageHeader();
+	protected MessageHeader header;
+	
+	public Message()
+	{
+		this.header= new MessageHeader();
+	}
+	
 	
 	/**
 	 * @return the header

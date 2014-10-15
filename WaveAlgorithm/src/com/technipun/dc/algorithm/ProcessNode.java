@@ -8,25 +8,34 @@ import com.technipun.ds.Node;
 
 public class ProcessNode extends Node {
 
-	public ProcessNode() {
+	public ProcessNode(int nodeID) {
+		this.nodeID = nodeID;
+		messageQueue = new MessageQueue();
+		receiveVector = new ArrayList<ReceiveIndicator>();
+
 	}
 
 	private ArrayList<ReceiveIndicator> receiveVector;
 
 	private MessageQueue messageQueue;
-	
-	private enum status{WAITING,HAS_SILENT_NEIGH,SEND_TOKEN,DECIDED};
+
+	private enum status {
+		WAITING, HAS_SILENT_NEIGH, DECIDED
+	};
 
 	public void addMessage(Message msg) {
 		messageQueue.add(msg);
 	}
 
 	public void init() {
-		receiveVector = new ArrayList<ReceiveIndicator>();
+
 		Iterator<Node> neighItr = neigh.iterator();
 		while (neighItr.hasNext())
 			receiveVector.add(new ReceiveIndicator((ProcessNode) neighItr
 					.next()));
+
+		System.out.println("Process Node[" + this.nodeID + "] Initiated");
+
 	}
 
 	private ProcessNode receiveToken() {
@@ -53,12 +62,12 @@ public class ProcessNode extends Node {
 
 	}
 
-	private int getRecCount() {
-		int recCount = 1;
+	private int getNonRecCount() {
+		int recCount = 0;
 		Iterator<ReceiveIndicator> recItr = receiveVector.iterator();
 		while (recItr.hasNext()) {
 			ReceiveIndicator recnode = recItr.next();
-			if (recnode.isReceived())
+			if (!recnode.isReceived())
 				recCount++;
 		}
 		return recCount;
@@ -75,27 +84,38 @@ public class ProcessNode extends Node {
 	}
 
 	public void runWave() {
-		init();
-		while (getRecCount() > 1) {
+		
+		while (getNonRecCount() > 1) {
 
 			ProcessNode sender = receiveToken();
 			if (sender != null) {
 				System.out.println("Process Node[" + this.nodeID
 						+ "] Received Token from Process Node[" + sender.nodeID
 						+ "]");
-			} else {
-				try {
-					wait(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			} 
 
 		}
-		ProcessNode silentNeigh =findSilentNeighbour();
+		
+		ProcessNode silentNeigh = findSilentNeighbour();
 		System.out.println("Process Node[" + this.nodeID
-				+ "] found its silent neighbour:Process Node["+silentNeigh.nodeID+"]");
-		send(silentNeigh,MessageType.TOKEN);
+				+ "] found its silent neighbour:Process Node["
+				+ silentNeigh.nodeID + "]");
+		send(silentNeigh, MessageType.TOKEN);
+
+		//while (true) {
+
+			ProcessNode sender = receiveToken();
+			if (sender == silentNeigh) {
+				System.out
+						.println("Process Node["
+								+ this.nodeID
+								+ "] Received Token from Silent Neighbour Process Node["
+								+ sender.nodeID + "]");
+				System.out.println("Process Node[" + this.nodeID + "] Decides");
+			} 
+
+		//}
+
 	}
-	
+
 }
