@@ -1,10 +1,15 @@
+import java.util.ArrayList;
+
 import com.technipun.dc.algorithm.ProcessNode;
 
 
 public class WaveMain {
 	
+	private static ArrayList<ProcessNode> treenodes;
+	
 	public static void main(String args[])
 	{
+		treenodes = new ArrayList<ProcessNode>();
 		ProcessNode n0=new ProcessNode(0);
 		ProcessNode n1=new ProcessNode(1);
 		ProcessNode n2=new ProcessNode(2);
@@ -22,6 +27,8 @@ public class WaveMain {
 		n2.addNeigh(n6);
 		n3.addNeigh(n7);
 		
+		
+		
 		n0.init();
 		n1.init();
 		n2.init();
@@ -31,18 +38,27 @@ public class WaveMain {
 		n6.init();
 		n7.init();
 		
-		
-		n0.runWave();
-		n1.runWave();
-		n2.runWave();
-		n3.runWave();
-		n4.runWave();
-		n5.runWave();
-		n6.runWave();
-		n7.runWave();
-		
-		
-		
+		n0.executeStep();
+		n1.executeStep();
+		n2.executeStep();
+		n4.executeStep();
+		n5.executeStep();
+		n6.executeStep();
+		n2.executeStep();
+		n1.executeStep();
+		n3.executeStep();
+		n7.executeStep();
+		n6.executeStep();
+		n6.executeStep();
+		n3.executeStep();
+		n1.executeStep();
+		n0.executeStep();
+		n1.executeStep();
+		n7.executeStep();
+		n2.executeStep();
+		n4.executeStep();
+		n5.executeStep();
+		n6.executeStep();
 		
 	}
 
