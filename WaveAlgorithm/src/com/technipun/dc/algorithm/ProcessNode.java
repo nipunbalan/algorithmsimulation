@@ -132,83 +132,6 @@ public class ProcessNode extends Node {
 		return null;
 	}
 
-	public void runWave() {
-
-		while (getNonRecCount() > 1) {
-
-			ProcessNode sender = receiveToken();
-			if (sender != null) {
-				System.out.println("Process Node[" + this.nodeID
-						+ "] Received Token from Process Node[" + sender.nodeID
-						+ "]");
-			}
-
-		}
-
-		ProcessNode silentNeigh = findSilentNeighbour();
-		System.out.println("Process Node[" + this.nodeID
-				+ "] found its silent neighbour:Process Node["
-				+ silentNeigh.nodeID + "]");
-		send(silentNeigh, MessageType.TOKEN);
-
-		// while (true) {
-
-		ProcessNode sender = receiveToken();
-		if (sender == silentNeigh) {
-			System.out.println("Process Node[" + this.nodeID
-					+ "] Received Token from Silent Neighbour Process Node["
-					+ sender.nodeID + "]");
-			System.out.println("Process Node[" + this.nodeID + "] Decides");
-		}
-
-		// }
-
-	}
-
-	public void executeStep() {
-
-		while (!messageQueue.isEmpty()) {
-			if (getNonRecCount() > 1) {
-				this.status = Status.WAITING;
-				ProcessNode sender = receiveToken();
-				if (sender != null) {
-					// System.out.println("Process Node[" + this.nodeID
-					// + "] Received Token from Process Node["
-					// + sender.nodeID + "]");
-
-				}
-
-			} else {
-				break;
-			}
-		}
-		this.silentNeigh = findSilentNeighbour();
-		if (this.status != Status.TOKEN_SENT) {
-			if (silentNeigh != null) {
-				if (this.status != Status.TOKEN_SENT) {
-					// System.out.println("Process Node[" + this.nodeID
-					// + "] found its silent neighbour:Process Node["
-					// + silentNeigh.nodeID + "]");
-					send(silentNeigh, MessageType.TOKEN);
-					this.status = Status.TOKEN_SENT;
-					// System.out
-					// .println("Process Node["
-					// + this.nodeID
-					// + "] sent token to its silent neighbour:Process Node["
-					// + silentNeigh.nodeID + "]");
-				}
-			}
-		}
-		ProcessNode sender = receiveToken();
-		if (sender != null && silentNeigh != null && sender == silentNeigh) {
-			// System.out.println("Process Node[" + this.nodeID
-			// + "] Received Token from Silent Neighbour Process Node["
-			// + sender.nodeID + "]");
-			System.out.println("Process Node[" + this.nodeID + "] Decides");
-			this.status = Status.DECIDED;
-			deffuse();
-		}
-	}
 
 	public void deffuse() {
 		Iterator<Node> neighItr = neigh.iterator();
@@ -217,37 +140,29 @@ public class ProcessNode extends Node {
 			if (node != silentNeigh) {
 				this.send(node, MessageType.TOKEN);
 			}
-
 		}
 	}
 
 	public void doStep() {
-		switch (this.status) {
+		//System.out.println("Process Node["+nodeID+"] executing");
+		while (!messageQueue.isEmpty() && getNonRecCount() > 1) {
+			this.status = Status.WAITING;
+			receiveToken();
+		}
 
-		case DECIDED:
-			break;
-		case TOKEN_SENT:
+		this.silentNeigh = findSilentNeighbour();
+		if (this.silentNeigh != null && this.status != Status.TOKEN_SENT) {
+			send(this.silentNeigh, MessageType.TOKEN);
+			this.status = Status.TOKEN_SENT;
+		}
+		if (status == Status.TOKEN_SENT) {
 			ProcessNode sender = receiveToken();
-			if (sender != null && sender == silentNeigh)
+			if (sender != null && sender == silentNeigh) {
 				decide();
-			break;
-
-		default:
-			while (!messageQueue.isEmpty() && getNonRecCount() > 1) {
-				this.status = Status.WAITING;
-				receiveToken();
 			}
-			this.silentNeigh = findSilentNeighbour();
-			if (this.silentNeigh != null && this.status != Status.TOKEN_SENT) {
-				send(this.silentNeigh, MessageType.TOKEN);
-				this.status = Status.TOKEN_SENT;
-			}
-			break;
-
 		}
 
 	}
-
 	public void decide() {
 		this.status = Status.DECIDED;
 		System.out.println("Process Node[" + this.nodeID + "] Decides");

@@ -98,14 +98,16 @@ public class Node {
 	}
 
 	private boolean isNeighbour(Node node) {
-		Iterator<Node> neighItr = neigh.iterator();
-		while (neighItr.hasNext()) {
-			Node currNode = neighItr.next();
-			if (currNode == node) {
-				return true;
-			}
-		}
-		return false;
+//		Iterator<Node> neighItr = neigh.iterator();
+//		while (neighItr.hasNext()) {
+//			Node currNode = neighItr.next();
+//			if (currNode == node) {
+//				return true;
+//			}
+//		}
+		
+		return neigh.contains(node);
+	//	return false;
 	}
 
 }

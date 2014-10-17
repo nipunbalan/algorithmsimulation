@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
 
 import com.technipun.dc.algorithm.ProcessNode;
 
@@ -38,59 +40,44 @@ public class WaveMain {
 		
 		
 		
-		n0.init(true);
-		n1.init(true);
-		n2.init(true);
-		n3.init(true);
-		n4.init(true);
-		n5.init(true);
-		n6.init(true);
-		n7.init(true);
 		
-//		n0.executeStep();
-//		n1.executeStep();
-//		n2.executeStep();
-//		n4.executeStep();
-//		n5.executeStep();
-//		n6.executeStep();
-//		n2.executeStep();
-//		n1.executeStep();
-//		n3.executeStep();
-//		n7.executeStep();
-//		n6.executeStep();
-//		n6.executeStep();
-//		n3.executeStep();
-//		n1.executeStep();
-//		n0.executeStep();
-//		n1.executeStep();
-//		n7.executeStep();
-//		n2.executeStep();
-//		n4.executeStep();
-//		n5.executeStep();
-//		n6.executeStep();
+		Iterator<ProcessNode> nodeItr = treenodes.iterator();
+		while(nodeItr.hasNext())
+		{
+			nodeItr.next().init(true);
+		}
+		
+		Random randomGenerator = new Random();
+		
+		for(int i=0;i<treenodes.size()*100;i++ )
+		{
+			int j = randomGenerator.nextInt(treenodes.size());
+			treenodes.get(j).doStep();
+		}
+		
 		
 
-		n0.doStep();
-		n1.doStep();
-		n2.doStep();
-		n4.doStep();
-		n5.doStep();
-		n6.doStep();
-		n2.doStep();
-		n1.doStep();
-		n3.doStep();
-		n7.doStep();
-		n6.doStep();
-		n6.doStep();
-		n3.doStep();
-		n1.doStep();
-		n0.doStep();
-		n1.doStep();
-		n7.doStep();
-		n2.doStep();
-		n4.doStep();
-		n5.doStep();
-		n6.doStep();
+//		n0.doStep();
+//		n1.doStep();
+//		n2.doStep();
+//		n4.doStep();
+//		n5.doStep();
+//		n6.doStep();
+//		n2.doStep();
+//		n1.doStep();
+//		n3.doStep();
+//		n7.doStep();
+//		n6.doStep();
+//		n6.doStep();
+//		n3.doStep();
+//		n1.doStep();
+//		n0.doStep();
+//		n1.doStep();
+//		n7.doStep();
+//		n2.doStep();
+//		n4.doStep();
+//		n5.doStep();
+//		n6.doStep();
 		
 		
 		
