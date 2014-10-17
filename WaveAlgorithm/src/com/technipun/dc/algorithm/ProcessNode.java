@@ -47,7 +47,7 @@ public class ProcessNode extends Node {
 	}
 
 	public void init(boolean runDiffusion) {
-		this.status=Status.INIT;
+		this.status = Status.INIT;
 		this.runDiffusion = runDiffusion;
 		Iterator<Node> neighItr = neigh.iterator();
 		while (neighItr.hasNext())
@@ -120,11 +120,14 @@ public class ProcessNode extends Node {
 		Iterator<ReceiveIndicator> recItr = receiveVector.iterator();
 		while (recItr.hasNext()) {
 			ReceiveIndicator recnode = recItr.next();
-			if (!recnode.isReceived())
-				System.out.println("Process Node[" + this.nodeID
-						+ "] found its silent neighbour:Process Node["
-						+ recnode.getNode().nodeID + "]");
-			return recnode.getNode();
+			if (!recnode.isReceived()) {
+				if (this.status != Status.TOKEN_SENT) {
+					System.out.println("Process Node[" + this.nodeID
+							+ "] found its silent neighbour:Process Node["
+							+ recnode.getNode().nodeID + "]");
+				}
+				return recnode.getNode();
+			}
 		}
 		return null;
 	}
@@ -220,6 +223,7 @@ public class ProcessNode extends Node {
 
 	public void doStep() {
 		switch (this.status) {
+
 		case DECIDED:
 			break;
 		case TOKEN_SENT:
@@ -227,6 +231,7 @@ public class ProcessNode extends Node {
 			if (sender != null && sender == silentNeigh)
 				decide();
 			break;
+
 		default:
 			while (!messageQueue.isEmpty() && getNonRecCount() > 1) {
 				this.status = Status.WAITING;
@@ -246,8 +251,7 @@ public class ProcessNode extends Node {
 	public void decide() {
 		this.status = Status.DECIDED;
 		System.out.println("Process Node[" + this.nodeID + "] Decides");
-		if (runDiffusion)
-		{
+		if (runDiffusion) {
 			deffuse();
 		}
 	}
