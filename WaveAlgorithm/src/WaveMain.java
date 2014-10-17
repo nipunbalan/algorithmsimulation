@@ -12,6 +12,7 @@ public class WaveMain {
 	public static void main(String args[])
 	{
 		treenodes = new ArrayList<ProcessNode>();
+		boolean diffuse = true;
 		ProcessNode n0=new ProcessNode(0);
 		ProcessNode n1=new ProcessNode(1);
 		ProcessNode n2=new ProcessNode(2);
@@ -44,44 +45,17 @@ public class WaveMain {
 		Iterator<ProcessNode> nodeItr = treenodes.iterator();
 		while(nodeItr.hasNext())
 		{
-			nodeItr.next().init(true);
+			nodeItr.next().init(diffuse);
 		}
 		
 		Random randomGenerator = new Random();
-		
-		for(int i=0;i<treenodes.size()*100;i++ )
+		int i;
+		for(i=0;i<treenodes.size()*100;i++ )
 		{
 			int j = randomGenerator.nextInt(treenodes.size());
 			treenodes.get(j).doStep();
 		}
-		
-		
-
-//		n0.doStep();
-//		n1.doStep();
-//		n2.doStep();
-//		n4.doStep();
-//		n5.doStep();
-//		n6.doStep();
-//		n2.doStep();
-//		n1.doStep();
-//		n3.doStep();
-//		n7.doStep();
-//		n6.doStep();
-//		n6.doStep();
-//		n3.doStep();
-//		n1.doStep();
-//		n0.doStep();
-//		n1.doStep();
-//		n7.doStep();
-//		n2.doStep();
-//		n4.doStep();
-//		n5.doStep();
-//		n6.doStep();
-		
-		
-		
-		
+	
 		
 	}
 

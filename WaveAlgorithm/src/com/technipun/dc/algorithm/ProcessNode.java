@@ -143,13 +143,16 @@ public class ProcessNode extends Node {
 		}
 	}
 
-	public void doStep() {
-		//System.out.println("Process Node["+nodeID+"] executing");
+	public boolean doStep() {
+		if (status==Status.DECIDED)
+		{
+			return false;
+		}
+		System.out.println("[---------Process Node["+nodeID+"]------------]");
 		while (!messageQueue.isEmpty() && getNonRecCount() > 1) {
 			this.status = Status.WAITING;
 			receiveToken();
 		}
-
 		this.silentNeigh = findSilentNeighbour();
 		if (this.silentNeigh != null && this.status != Status.TOKEN_SENT) {
 			send(this.silentNeigh, MessageType.TOKEN);
@@ -159,10 +162,13 @@ public class ProcessNode extends Node {
 			ProcessNode sender = receiveToken();
 			if (sender != null && sender == silentNeigh) {
 				decide();
+				return true;
 			}
 		}
+		return false;
 
 	}
+	
 	public void decide() {
 		this.status = Status.DECIDED;
 		System.out.println("Process Node[" + this.nodeID + "] Decides");
