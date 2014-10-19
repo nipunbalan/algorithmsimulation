@@ -8,22 +8,36 @@ import com.technipun.ds.Node;
 
 public class ProcessNode extends Node {
 
-	public ProcessNode(int nodeID) {
-		this.nodeID = nodeID;
-		messageQueue = new MessageQueue();
-		receiveVector = new ArrayList<ReceiveIndicator>();
-
-	}
-
 	private ArrayList<ReceiveIndicator> receiveVector;
 
 	private MessageQueue messageQueue;
+	private MessageQueue tokenQueue;
 	private ProcessNode silentNeigh;
 	private boolean runDiffusion;
 	private boolean initiator;
 	private boolean wStatus;
 	private int wNeighCount;
 	private boolean candidate;
+	private ProcessNode leadingCandidate;
+
+	private enum Status {
+		INIT, WAITING, DECIDED, TOKEN_SENT
+	};
+
+	private enum State {
+		SLEEP, LEADER, LOST
+	}
+
+	private Status status;
+	private State state;
+
+	public ProcessNode(int nodeID) {
+		this.nodeID = nodeID;
+		messageQueue = new MessageQueue();
+		tokenQueue = new MessageQueue();
+		receiveVector = new ArrayList<ReceiveIndicator>();
+
+	}
 
 	/**
 	 * @return the candidate
@@ -33,7 +47,8 @@ public class ProcessNode extends Node {
 	}
 
 	/**
-	 * @param candidate the candidate to set
+	 * @param candidate
+	 *            the candidate to set
 	 */
 	public void setCandidate(boolean candidate) {
 		this.candidate = candidate;
@@ -69,23 +84,16 @@ public class ProcessNode extends Node {
 		this.runDiffusion = runDiffusion;
 	}
 
-	private enum Status {
-		INIT, WAITING, DECIDED, TOKEN_SENT
-	};
-
-	private enum State {
-		SLEEP, LEADER, LOST
-	}
-
-	private Status status;
-	private State state;
-
 	public void addMessage(Message msg) {
 		messageQueue.add(msg);
 	}
 
 	public void init(boolean runDiffusion) {
 		this.status = Status.INIT;
+		this.state = State.SLEEP;
+		if (this.isCandidate()) {
+			this.leadingCandidate = this;
+		}
 		this.runDiffusion = runDiffusion;
 		Iterator<Node> neighItr = neigh.iterator();
 		while (neighItr.hasNext())
@@ -96,8 +104,13 @@ public class ProcessNode extends Node {
 
 	}
 
-	private ProcessNode receiveToken() {
-		Message msg = messageQueue.poll();
+	private Message receiveToken() {
+		Message msg;
+		if (!tokenQueue.isEmpty()) {
+			msg = tokenQueue.poll();
+		} else {
+			msg = messageQueue.poll();
+		}
 		if (msg != null && msg.header.getMsgType() == MessageType.TOKEN) {
 			Iterator<ReceiveIndicator> recItr = receiveVector.iterator();
 			while (recItr.hasNext()) {
@@ -119,7 +132,7 @@ public class ProcessNode extends Node {
 								+ msg.header.getSender().nodeID + "]");
 					}
 
-					return msg.header.getSender();
+					return msg;
 				}
 			}
 		}
@@ -131,6 +144,22 @@ public class ProcessNode extends Node {
 		newMsg.header.setMsgType(messageType);
 		newMsg.header.setSender(this);
 		newMsg.header.setReceiver(recepient);
+		newMsg.send();
+
+		if (recepient == silentNeigh) {
+			System.out.println("Process Node[" + this.nodeID
+					+ "] sent token to its silent neighbour:Process Node["
+					+ silentNeigh.nodeID + "]");
+		}
+	}
+
+	private void send(ProcessNode recepient, MessageType messageType,
+			Object message) {
+		Message newMsg = new Message();
+		newMsg.header.setMsgType(messageType);
+		newMsg.header.setSender(this);
+		newMsg.header.setReceiver(recepient);
+		newMsg.setMessage(message);
 		newMsg.send();
 
 		if (recepient == silentNeigh) {
@@ -175,7 +204,7 @@ public class ProcessNode extends Node {
 		while (neighItr.hasNext()) {
 			ProcessNode node = (ProcessNode) neighItr.next();
 			if (node != silentNeigh) {
-				this.send(node, MessageType.TOKEN);
+				this.send(node, MessageType.TOKEN, this.leadingCandidate);
 			}
 		}
 	}
@@ -188,55 +217,73 @@ public class ProcessNode extends Node {
 				+ "]------------]");
 		while (!messageQueue.isEmpty() && getNonRecCount() > 1) {
 			this.status = Status.WAITING;
-			receiveToken();
+			Message msg = receiveToken();
+			if (msg != null) {
+				this.leadingCandidate = elect(leadingCandidate, msg);
+			}
+
 		}
 		this.silentNeigh = findSilentNeighbour();
 		if (this.silentNeigh != null && this.status != Status.TOKEN_SENT) {
-			send(this.silentNeigh, MessageType.TOKEN);
+			send(this.silentNeigh, MessageType.TOKEN,this.leadingCandidate);
 			this.status = Status.TOKEN_SENT;
 		}
 		if (status == Status.TOKEN_SENT) {
-			ProcessNode sender = receiveToken();
-			if (sender != null && sender == silentNeigh) {
-				decide();
-				return true;
+			Message msg = receiveToken();
+			if (msg != null) {
+				this.leadingCandidate = elect(leadingCandidate, msg);
+				ProcessNode sender = msg.header.getSender();
+				if (sender != null && sender == silentNeigh) {
+					decide();
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
 	public void decide() {
+		if (this.leadingCandidate == this) {
+			this.state = State.LEADER;
+			System.out.println("Process Node[" + this.nodeID
+					+ "] Decides itself as leader");
+		} else if (this.isCandidate()) {
+			this.state = State.LOST;
+		} else {
+			this.state = State.SLEEP;
+		}
 		this.status = Status.DECIDED;
-		System.out.println("Process Node[" + this.nodeID + "] Decides");
+		if (this.state != State.LEADER) {
+			System.out.println("Process Node[" + this.nodeID
+					+ "] Decides ProcessNode[" + leadingCandidate.nodeID
+					+ "] as leader");
+		}
+
 		if (runDiffusion) {
 			deffuse();
 		}
 	}
 
-	public void doElectionStep() {
+	public boolean doElectionStep() {
 		if (this.isInitiator()) {
 			wakeupNwakeupNeigh();
 		}
 		while (!messageQueue.isEmpty() && wNeighCount < neigh.size()) {
-			boolean received=receiveWakeup();
-			if (received)
-			{
+			boolean received = receiveWakeup();
+			if (received) {
 				wakeupNwakeupNeigh();
 			}
 		}
-		
-		if (wNeighCount == neigh.size())
-		{
-			doStep();
+		if (wNeighCount == neigh.size()) {
+			return doStep();
 		}
-		
-		
+		return false;
 	}
 
 	private void wakeupNwakeupNeigh() {
 		if (!this.wStatus) {
 			this.wStatus = true;
-			System.out.println("ProcessNode["+nodeID+"] woke up!");
+			System.out.println("ProcessNode[" + nodeID + "] woke up!");
 			Iterator<Node> neighItr = neigh.iterator();
 			while (neighItr.hasNext()) {
 				ProcessNode neighNode = (ProcessNode) neighItr.next();
@@ -245,15 +292,42 @@ public class ProcessNode extends Node {
 		}
 	}
 
+	// private boolean receiveWakeup() {
+	// Message msg = messageQueue.poll();
+	// if (msg != null && msg.header.getMsgType() == MessageType.WAKEUP) {
+	// System.out.println("ProcessNode["+nodeID+"] got wakeup token from ProcessNode["+msg.header.getSender().nodeID+"]");
+	// wNeighCount++;
+	// return true;
+	// } else {
+	// return false;
+	// }
+	// }
+
 	private boolean receiveWakeup() {
 		Message msg = messageQueue.poll();
 		if (msg != null && msg.header.getMsgType() == MessageType.WAKEUP) {
-			System.out.println("ProcessNode["+nodeID+"] got wakeup token from ProcessNode["+msg.header.getSender().nodeID+"]");
+			System.out.println("ProcessNode[" + nodeID
+					+ "] got wakeup token from ProcessNode["
+					+ msg.header.getSender().nodeID + "]");
 			wNeighCount++;
 			return true;
-		} else {
-			return false;
+		} else if (msg != null && msg.header.getMsgType() == MessageType.TOKEN) {
+			tokenQueue.add(msg);
 		}
+		return false;
 	}
 
+	private ProcessNode elect(ProcessNode ldCandidate, Message message) {
+		ProcessNode neighCandidNode = (ProcessNode) message.getMessage();
+		if (neighCandidNode == null) {
+			return ldCandidate;
+		}
+		if (ldCandidate == null || neighCandidNode.nodeID <= ldCandidate.nodeID) {
+			return neighCandidNode;
+		} else {
+			return ldCandidate;
+		}
+	}
+	
+	
 }
