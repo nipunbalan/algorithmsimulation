@@ -4,20 +4,20 @@ package com.technipun.dc.algorithm;
 public class MessageHeader {
 	
 	
-	private ProcessNode sender;
-	private ProcessNode receiver;
+	private WaveProcessNode sender;
+	private WaveProcessNode receiver;
 	private MessageType msgType;
 	
-	public ProcessNode getSender() {
+	public WaveProcessNode getSender() {
 		return sender;
 	}
-	public void setSender(ProcessNode sender) {
+	public void setSender(WaveProcessNode sender) {
 		this.sender = sender;
 	}
-	public ProcessNode getReceiver() {
+	public WaveProcessNode getReceiver() {
 		return receiver;
 	}
-	public void setReceiver(ProcessNode receiver) {
+	public void setReceiver(WaveProcessNode receiver) {
 		this.receiver = receiver;
 	}
 	

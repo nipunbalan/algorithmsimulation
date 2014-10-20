@@ -2,24 +2,24 @@ package com.technipun.dc.algorithm;
 
 public class ReceiveIndicator {
 	
-	public ReceiveIndicator(ProcessNode node) {
+	public ReceiveIndicator(WaveProcessNode node) {
 		this.node=node;
 		this.received=false;
 	}
 
-	private ProcessNode node;
+	private WaveProcessNode node;
 	
 	/**
 	 * @return the nodeID
 	 */
-	public ProcessNode getNode() {
+	public WaveProcessNode getNode() {
 		return node;
 	}
 	
 	/**
 	 * @param nodeID the nodeID to set
 	 */
-	public void setNode(ProcessNode node) {
+	public void setNode(WaveProcessNode node) {
 		this.node = node;
 	}
 	
