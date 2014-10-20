@@ -1,5 +1,11 @@
 package com.technipun.dc.algorithm;
 
+/**
+ * @desc This class defines a Message header
+ * @author Nipun Balan Thekkummal
+ * @version 1.0
+ */
+
 
 public class MessageHeader {
 	
