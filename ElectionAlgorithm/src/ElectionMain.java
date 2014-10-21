@@ -3,10 +3,13 @@ import java.util.Iterator;
 import java.util.Random;
 
 import com.technipun.dc.algorithm.ElectionProcessNode;
+import com.technipun.dc.algorithm.Tree;
 
 public class ElectionMain {
 
 	private static ArrayList<ElectionProcessNode> treenodes;
+
+	private static Tree tree;
 
 	public static void main(String args[]) {
 		// treenodes = new ArrayList<ElectionProcessNode>();
@@ -58,7 +61,7 @@ public class ElectionMain {
 		n5.setCandidate(true);
 		n6.setCandidate(true);
 		n7.setCandidate(true);
-		//n3.setCandidate(true);
+		// n3.setCandidate(true);
 		// n6.setCandidate(true);
 
 		Iterator<ElectionProcessNode> nodeItr = treenodes.iterator();
@@ -85,4 +88,35 @@ public class ElectionMain {
 		}
 	}
 
+	public void genRandTree(int nodeCount) {
+		
+		tree = new Tree();
+		int x = nodeCount;
+		int y = x - 1;
+		int rand;
+		int[] myNumbers = new int[x];
+		Random randomGenerator = new Random();
+		// int i = 0;
+		int i = 0;
+		int j = 1;
+
+		while (y > 0) {
+			if (y > 1) {
+				rand = randomGenerator.nextInt(y - 1) + 1;
+			} else {
+				rand = 1;
+				y--;
+			}
+			y = y - rand;
+			System.out.println("Random no." + rand);
+			for (int k = rand; k > 0; k--) {
+				if (myNumbers[i] != 1) {
+					System.out.println("[" + i + "]:-->" + j);
+					j++;
+				}
+			}
+			i++;
+		}
+
+	}
 }
