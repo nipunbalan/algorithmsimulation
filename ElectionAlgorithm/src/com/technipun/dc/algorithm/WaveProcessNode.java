@@ -183,7 +183,7 @@ public class WaveProcessNode extends Node {
 		if (status == Status.DECIDED) {
 			return false;
 		}
-		while (!messageQueue.isEmpty() && getNonRecCount() > 1) {
+		while ((!messageQueue.isEmpty()||!tokenQueue.isEmpty()) && getNonRecCount() > 1) {
 			this.status = Status.WAITING;
 			Message msg = receiveToken();
 			doProcess(msg);

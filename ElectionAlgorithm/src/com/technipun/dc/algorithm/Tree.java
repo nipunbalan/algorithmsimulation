@@ -1,28 +1,29 @@
 package com.technipun.dc.algorithm;
 
+
 import java.util.ArrayList;
 
 import com.technipun.ds.Node;
 
-public class Tree {
+public class Tree<T> {
 
-	private ArrayList<Node> treeNodes;
+	private ArrayList<T> treeNodes;
 
 	public Tree() {
-		treeNodes = new ArrayList<Node>();
+		treeNodes = new ArrayList<T>();
 	}
 
-	public void addNode(Node node) {
+	public void addNode(T node) {
 		treeNodes.add(node);
 	}
 
-	public void removeNode(Node node) {
+	public void removeNode(T node) {
 		treeNodes.remove(node);
 	}
 	
-	public void createNode(int nodeID)
+	public ArrayList<T> getAllNodes()
 	{
-		
+		return treeNodes;
 	}
-
+	
 }
