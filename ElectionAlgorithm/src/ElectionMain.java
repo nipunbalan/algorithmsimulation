@@ -19,111 +19,7 @@ public class ElectionMain {
 
 	public static void main(String args[]) {
 
-		// int initiatorCount = 0;
-		// // treenodes = new ArrayList<ElectionProcessNode>();
-		// // boolean diffuse = false;
-		// // ElectionProcessNode n0 = new ElectionProcessNode(0);
-		// // ElectionProcessNode n1 = new ElectionProcessNode(1);
-		// // ElectionProcessNode n2 = new ElectionProcessNode(2);
-		// // ElectionProcessNode n3 = new ElectionProcessNode(3);
-		// // ElectionProcessNode n4 = new ElectionProcessNode(4);
-		// // ElectionProcessNode n5 = new ElectionProcessNode(5);
-		// // ElectionProcessNode n6 = new ElectionProcessNode(6);
-		// // ElectionProcessNode n7 = new ElectionProcessNode(7);
-		//
-		// electionTreeNodes = new ArrayList<ElectionProcessNode>();
-		// boolean diffuse = true;
-		// ElectionProcessNode n0 = new ElectionProcessNode(0);
-		// ElectionProcessNode n1 = new ElectionProcessNode(1);
-		// ElectionProcessNode n2 = new ElectionProcessNode(2);
-		// ElectionProcessNode n3 = new ElectionProcessNode(3);
-		// ElectionProcessNode n4 = new ElectionProcessNode(4);
-		// ElectionProcessNode n5 = new ElectionProcessNode(5);
-		// ElectionProcessNode n6 = new ElectionProcessNode(6);
-		// ElectionProcessNode n7 = new ElectionProcessNode(7);
-		//
-		// electionTreeNodes.add(n0);
-		// electionTreeNodes.add(n1);
-		// electionTreeNodes.add(n2);
-		// electionTreeNodes.add(n3);
-		// electionTreeNodes.add(n4);
-		// electionTreeNodes.add(n5);
-		// electionTreeNodes.add(n6);
-		// electionTreeNodes.add(n7);
-		//
-		// n0.addNeigh(n1);
-		// n1.addNeigh(n2);
-		// n1.addNeigh(n3);
-		// n2.addNeigh(n4);
-		// n2.addNeigh(n5);
-		// n2.addNeigh(n6);
-		// n3.addNeigh(n7);
-		//
-		// Random randomGenerator = new Random();
-		// int randCandCount = randomGenerator
-		// .nextInt(electionTreeNodes.size() - 1) + 1;
-		// System.out.println("Tree has " + randCandCount
-		// + " candidate(s) (random)");
-		// int c = randCandCount;
-		// while (c > 0) {
-		// int randCandNode = randomGenerator
-		// .nextInt(electionTreeNodes.size());
-		// if (!electionTreeNodes.get(randCandNode).isCandidate()) {
-		// electionTreeNodes.get(randCandNode).setCandidate(true);
-		// System.out.println("Node[" + randCandNode
-		// + "] is choosen as candidate");
-		// c--;
-		// }
-		// }
-		//
-		// while (initiatorCount < 1) {
-		// Iterator<ElectionProcessNode> treenodeItr = electionTreeNodes
-		// .iterator();
-		// while (treenodeItr.hasNext()) {
-		// ElectionProcessNode node = treenodeItr.next();
-		// int randnum = randomGenerator.nextInt(2);
-		// if (node.isCandidate() && randnum == 1) {
-		// node.setInitiator(true);
-		// System.out.println("Node[" + node.nodeID
-		// + "] is randomly choosen as election initiator");
-		// initiatorCount++;
-		//
-		// }
-		// }
-		// }
-		//
-		// Iterator<ElectionProcessNode> nodeItr = electionTreeNodes.iterator();
-		// while (nodeItr.hasNext()) {
-		// nodeItr.next().init(diffuse);
-		// }
-		//
-		// int i;
-		// int decideCount = 0;
-		//
-		// for (i = 0; i < electionTreeNodes.size() * 100; i++) {
-		// int j = randomGenerator.nextInt(electionTreeNodes.size());
-		// // System.out.println(j);
-		// // boolean decided = treenodes.get(j).doStep();
-		// // System.out.println(j);
-		// boolean decided = electionTreeNodes.get(j).doElectionStep();
-		// if (decided) {
-		// decideCount++;
-		// }
-		// if (diffuse && decideCount == electionTreeNodes.size() || !diffuse
-		// && decideCount == 2) {
-		// System.out.println("Algorithm completed in " + i
-		// + " iterations");
-		// break;
-		// }
-		// }
-		// loadArbTree("election");
-		// runAlgorithm(true, "election");
-
-		// loadArbTree(args[0]);
-		//loadUnBalTree(args[0]);
-		// loadBalTree(args[0]);
-		//runAlgorithm(false, args[0]);
-		// loadBalTree("wave");
+		
 		switch (args[0].toLowerCase()) {
 		case "unbal": {
 			loadUnBalTree(args[1]);
@@ -145,7 +41,7 @@ public class ElectionMain {
 			break;
 		}
 		case "n": {
-			runAlgorithm(true, args[1]);
+			runAlgorithm(false, args[1]);
 			break;
 		}
 		}
