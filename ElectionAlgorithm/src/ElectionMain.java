@@ -120,9 +120,9 @@ public class ElectionMain {
 		// runAlgorithm(true, "election");
 
 		// loadArbTree(args[0]);
-		loadUnBalTree(args[0]);
+		//loadUnBalTree(args[0]);
 		// loadBalTree(args[0]);
-		runAlgorithm(false, args[0]);
+		//runAlgorithm(false, args[0]);
 		// loadBalTree("wave");
 		switch (args[0].toLowerCase()) {
 		case "unbal": {
@@ -412,7 +412,7 @@ public class ElectionMain {
 						|| !diffuse && decideCount == 2) {
 					System.out.println("Algorithm completed in " + i
 							+ " iterations");
-					break;
+				//	break;
 				}
 			}
 
