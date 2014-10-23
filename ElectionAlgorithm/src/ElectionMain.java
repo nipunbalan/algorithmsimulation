@@ -19,6 +19,8 @@ public class ElectionMain {
 
 	public static void main(String args[]) {
 
+		
+
 		switch (args[0].toLowerCase()) {
 		case "unbal": {
 			loadUnBalTree(args[1]);
@@ -30,6 +32,10 @@ public class ElectionMain {
 		}
 		case "arb": {
 			loadArbTree(args[1]);
+			break;
+		}
+		case "rand": {
+			genRandTree(args[1],Integer.parseInt(args[3]) );
 			break;
 		}
 		}
@@ -47,37 +53,60 @@ public class ElectionMain {
 
 	}
 
-	// public void genRandTree(int nodeCount) {
-	//
-	// tree = new Tree();
-	// int x = nodeCount;
-	// int y = x - 1;
-	// int rand;
-	// int[] myNumbers = new int[x];
-	// Random randomGenerator = new Random();
-	// // int i = 0;
-	// int i = 0;
-	// int j = 1;
-	//
-	// while (y > 0) {
-	// if (y > 1) {
-	// rand = randomGenerator.nextInt(y - 1) + 1;
-	// } else {
-	// rand = 1;
-	// y--;
-	// }
-	// y = y - rand;
-	// System.out.println("Random no." + rand);
-	// for (int k = rand; k > 0; k--) {
-	// if (myNumbers[i] != 1) {
-	// System.out.println("[" + i + "]:-->" + j);
-	// j++;
-	// }
-	// }
-	// i++;
-	// }
-	//
-	// }
+	public static void genRandTree(String processType, int nodeCount) {
+
+		waveTree = new Tree<WaveProcessNode>();
+		electionTree = new Tree<ElectionProcessNode>();
+		int x = nodeCount;
+		int y = x - 1;
+		int rand;
+		int[] myNumbers = new int[x];
+		Random randomGenerator = new Random();
+		int i = 0;
+		int j = 1;
+
+		for (int k = 0; k < nodeCount; k++) {
+			if (processType.equalsIgnoreCase("wave")) {
+
+				WaveProcessNode node = new WaveProcessNode(k);
+				waveTree.addNode(node);
+			} else if (processType.equalsIgnoreCase("election")) {
+				ElectionProcessNode node = new ElectionProcessNode(k);
+				electionTree.addNode(node);
+			}
+		}
+
+		if (processType.equalsIgnoreCase("wave")) {
+			waveTreeNodes = waveTree.getAllNodes();
+		} else if (processType.equalsIgnoreCase("election")) {
+			electionTreeNodes = electionTree.getAllNodes();
+		}
+		System.out.println("Generating random tree with " + nodeCount +"nodes");
+		while (y > 0) {
+			if (y > 1) {
+				rand = randomGenerator.nextInt(y - 1) + 1;
+			} else {
+				rand = 1;
+				y--;
+			}
+			y = y - rand;
+		//	System.out.println("Random no." + rand);
+			for (int k = rand; k > 0; k--) {
+				if (myNumbers[i] != 1) {
+					if (processType.equalsIgnoreCase("wave")) {
+						waveTreeNodes.get(i).addNeigh(waveTreeNodes.get(j));
+					} else if (processType.equalsIgnoreCase("election")) {
+						electionTreeNodes.get(i).addNeigh(
+								electionTreeNodes.get(j));
+					}
+					//System.out.println("[" + i + "]:-->" + j);
+					j++;
+				}
+			}
+			i++;
+		}
+
+	}
 
 	public static void loadBalTree(String processType) {
 		if (processType.equalsIgnoreCase("wave")) {
