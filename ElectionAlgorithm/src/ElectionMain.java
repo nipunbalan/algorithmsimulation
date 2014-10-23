@@ -19,7 +19,6 @@ public class ElectionMain {
 
 	public static void main(String args[]) {
 
-		
 		switch (args[0].toLowerCase()) {
 		case "unbal": {
 			loadUnBalTree(args[1]);
@@ -211,6 +210,7 @@ public class ElectionMain {
 
 	public static void runAlgorithm(boolean diffuse, String processType) {
 		Random randomGenerator = new Random();
+		int totalStepstoCmplete = 0;
 
 		if (processType.equalsIgnoreCase("election")) {
 
@@ -275,11 +275,15 @@ public class ElectionMain {
 				}
 				if ((diffuse && decideCount == electionTreeNodes.size())
 						|| !diffuse && decideCount == 2) {
-					System.out.println("Algorithm completed in " + i
-							+ " iterations");
-					break;
+
+					if (totalStepstoCmplete == 0) {
+						totalStepstoCmplete = i + 1;
+					}
+					// break;
 				}
 			}
+			System.out.println("Algorithm completed in " + totalStepstoCmplete
+					+ " iterations");
 		} else if (processType.equalsIgnoreCase("wave")) {
 
 			for (WaveProcessNode enode : waveTreeNodes) {
@@ -306,11 +310,14 @@ public class ElectionMain {
 				}
 				if ((diffuse && decideCount == waveTreeNodes.size())
 						|| !diffuse && decideCount == 2) {
-					System.out.println("Algorithm completed in " + i
-							+ " iterations");
-				//	break;
+					if (totalStepstoCmplete == 0) {
+						totalStepstoCmplete = i + 1;
+					}
+					// break;
 				}
 			}
+			System.out.println("Algorithm completed in " + totalStepstoCmplete
+					+ " iterations");
 
 		}
 	}
