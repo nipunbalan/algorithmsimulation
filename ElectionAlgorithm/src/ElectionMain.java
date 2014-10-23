@@ -19,8 +19,6 @@ public class ElectionMain {
 
 	public static void main(String args[]) {
 
-		
-
 		switch (args[0].toLowerCase()) {
 		case "unbal": {
 			loadUnBalTree(args[1]);
@@ -35,7 +33,7 @@ public class ElectionMain {
 			break;
 		}
 		case "rand": {
-			genRandTree(args[1],Integer.parseInt(args[3]) );
+			genRandTree(args[1], Integer.parseInt(args[3]));
 			break;
 		}
 		}
@@ -81,7 +79,8 @@ public class ElectionMain {
 		} else if (processType.equalsIgnoreCase("election")) {
 			electionTreeNodes = electionTree.getAllNodes();
 		}
-		System.out.println("Generating random tree with " + nodeCount +"nodes");
+		System.out.println("Generating random tree with " + nodeCount
+				+ " nodes");
 		while (y > 0) {
 			if (y > 1) {
 				rand = randomGenerator.nextInt(y - 1) + 1;
@@ -90,7 +89,7 @@ public class ElectionMain {
 				y--;
 			}
 			y = y - rand;
-		//	System.out.println("Random no." + rand);
+			// System.out.println("Random no." + rand);
 			for (int k = rand; k > 0; k--) {
 				if (myNumbers[i] != 1) {
 					if (processType.equalsIgnoreCase("wave")) {
@@ -99,7 +98,7 @@ public class ElectionMain {
 						electionTreeNodes.get(i).addNeigh(
 								electionTreeNodes.get(j));
 					}
-					//System.out.println("[" + i + "]:-->" + j);
+					// System.out.println("[" + i + "]:-->" + j);
 					j++;
 				}
 			}
@@ -292,24 +291,57 @@ public class ElectionMain {
 
 			int i;
 			int decideCount = 0;
+			int roundCount = 0;
 
 			for (i = 0; i < electionTreeNodes.size() * 100; i++) {
+
 				int j = randomGenerator.nextInt(electionTreeNodes.size());
 				// System.out.println(j);
 				// boolean decided = treenodes.get(j).doStep();
 				// System.out.println(j);
-				boolean decided = electionTreeNodes.get(j).doElectionStep();
-				if (decided) {
-					decideCount++;
-				}
-				if ((diffuse && decideCount == electionTreeNodes.size())
-						|| !diffuse && decideCount == 2) {
 
-					if (totalStepstoCmplete == 0) {
-						totalStepstoCmplete = i + 1;
+				System.out.println("\nRound (" + (i + 1) + ") executing " + j
+						+ " processes");
+				for (int k = 1; k <= j; k++) {
+					int rand = randomGenerator
+							.nextInt(electionTreeNodes.size());
+			//	System.out.println("ProcessNode[" + rand + "]");
+					boolean decided = electionTreeNodes.get(rand)
+							.doElectionStep();
+
+//					if (!electionTreeNodes.get(rand).isHadSendAction()
+//							&& !electionTreeNodes.get(rand)
+//									.isHadReceiveAction()) {
+//						
+//						System.out.println("ProcessNode["+electionTreeNodes.get(rand).getNodeID()+"] dont have any action");
+//
+//					}
+//					else if(!electionTreeNodes.get(rand).isHadSendAction())
+//					{
+//						System.out.println("ProcessNode["+electionTreeNodes.get(rand).getNodeID()+"] dont have any send action");
+//					}
+//					else if(!electionTreeNodes.get(rand).isHadReceiveAction())
+//					{
+//						System.out.println("ProcessNode["+electionTreeNodes.get(rand).getNodeID()+"] dont have any receive action");
+//					}
+
+					if (decided) {
+						decideCount++;
 					}
-					// break;
+					if ((diffuse && decideCount >= electionTreeNodes.size())
+							|| !diffuse && decideCount >= 2) {
+
+						if (totalStepstoCmplete == 0) {
+							totalStepstoCmplete = i + 1;
+						}
+						break;
+					}
+
 				}
+				if (totalStepstoCmplete != 0) {
+					break;
+				}
+
 			}
 			System.out.println("Algorithm completed in " + totalStepstoCmplete
 					+ " iterations");
@@ -321,29 +353,45 @@ public class ElectionMain {
 							.println(enode.nodeID + "-->" + eneighNode.nodeID);
 				}
 			}
-			int i;
-			int decideCount = 0;
+
 			Iterator<WaveProcessNode> nodeItr = waveTreeNodes.iterator();
 			while (nodeItr.hasNext()) {
 				nodeItr.next().init(diffuse);
 			}
 
+			int i;
+			int decideCount = 0;
+			int roundCount = 0;
+
 			for (i = 0; i < waveTreeNodes.size() * 100; i++) {
+
 				int j = randomGenerator.nextInt(waveTreeNodes.size());
 				// System.out.println(j);
 				// boolean decided = treenodes.get(j).doStep();
 				// System.out.println(j);
-				boolean decided = waveTreeNodes.get(j).doWaveStep();
-				if (decided) {
-					decideCount++;
-				}
-				if ((diffuse && decideCount == waveTreeNodes.size())
-						|| !diffuse && decideCount == 2) {
-					if (totalStepstoCmplete == 0) {
-						totalStepstoCmplete = i + 1;
+
+				System.out.println("\nRound (" + (i + 1) + ") executing " + j
+						+ " processes");
+				for (int k = 1; k <= j; k++) {
+					int rand = randomGenerator.nextInt(waveTreeNodes.size());
+					boolean decided = waveTreeNodes.get(rand).doWaveStep();
+					if (decided) {
+						decideCount++;
 					}
-					// break;
+					if ((diffuse && decideCount >= waveTreeNodes.size())
+							|| !diffuse && decideCount >= 2) {
+
+						if (totalStepstoCmplete == 0) {
+							totalStepstoCmplete = i + 1;
+						}
+						break;
+					}
+
 				}
+				if (totalStepstoCmplete != 0) {
+					break;
+				}
+
 			}
 			System.out.println("Algorithm completed in " + totalStepstoCmplete
 					+ " iterations");

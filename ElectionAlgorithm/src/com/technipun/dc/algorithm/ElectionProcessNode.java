@@ -101,6 +101,7 @@ public class ElectionProcessNode extends WaveProcessNode {
 				ElectionProcessNode neighNode = (ElectionProcessNode) neighItr
 						.next();
 				send(neighNode, MessageType.WAKEUP);
+				this.hadSendAction=true;
 			}
 		}
 	}
@@ -112,6 +113,7 @@ public class ElectionProcessNode extends WaveProcessNode {
 					+ "] got wakeup token from ProcessNode["
 					+ msg.header.getSender().nodeID + "]");
 			wNeighCount++;
+			this.hadReceiveAction=true;
 			return true;
 		} else if (msg != null && msg.header.getMsgType() == MessageType.TOKEN) {
 			tokenQueue.add(msg);
@@ -157,6 +159,8 @@ public class ElectionProcessNode extends WaveProcessNode {
 	}
 
 	public boolean doElectionStep() {
+//		this.hadReceiveAction=false;
+//		this.hadReceiveAction=false;
 		if (this.isInitiator()) {
 			wakeupNwakeupNeigh();
 		}

@@ -14,6 +14,38 @@ public class WaveProcessNode extends Node {
 	protected MessageQueue tokenQueue;
 	protected WaveProcessNode silentNeigh;
 	protected boolean runDiffusion;
+	protected boolean hadSendAction;
+	protected boolean hadReceiveAction;
+	/**
+	 * @return the hadSendAction
+	 */
+	public boolean isHadSendAction() {
+		return hadSendAction;
+	}
+
+	/**
+	 * @param hadSendAction the hadSendAction to set
+	 */
+	public void setHadSendAction(boolean hadSendAction) {
+		this.hadSendAction = hadSendAction;
+	}
+
+	/**
+	 * @return the hadReceiveAction
+	 */
+	public boolean isHadReceiveAction() {
+		return hadReceiveAction;
+	}
+
+	/**
+	 * @param hadReceiveAction the hadReceiveAction to set
+	 */
+	public void setHadReceiveAction(boolean hadReceiveAction) {
+		this.hadReceiveAction = hadReceiveAction;
+	}
+
+
+	
 
 	protected enum Status {
 		INIT, WAITING, DECIDED, TOKEN_SENT
@@ -86,7 +118,7 @@ public class WaveProcessNode extends Node {
 								+ "] Received Token from Process Node["
 								+ msg.header.getSender().nodeID + "]");
 					}
-
+					this.hadReceiveAction=true;
 					return msg;
 				}
 			}
@@ -95,6 +127,7 @@ public class WaveProcessNode extends Node {
 	}
 
 	protected void send(WaveProcessNode recepient, MessageType messageType) {
+		this.hadSendAction=true;
 		Message newMsg = new Message();
 		newMsg.header.setMsgType(messageType);
 		newMsg.header.setSender(this);
@@ -109,6 +142,7 @@ public class WaveProcessNode extends Node {
 
 	protected void send(WaveProcessNode recepient, MessageType messageType,
 			Object message) {
+		this.hadSendAction=true;
 		Message newMsg = new Message();
 		newMsg.header.setMsgType(messageType);
 		newMsg.header.setSender(this);
