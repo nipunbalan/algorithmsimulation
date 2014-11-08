@@ -1,7 +1,8 @@
 package com.technipun.ds;
 
 /**
- * @desc This class defines a Message Queue Structure
+ * This class defines a Message Queue Structure
+ *
  * @author Nipun Balan Thekkummal
  * @version 1.0
  */

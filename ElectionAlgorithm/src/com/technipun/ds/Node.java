@@ -1,7 +1,8 @@
 package com.technipun.ds;
 
 /**
- * @desc This class defines a Node
+ * This class defines a Node which is the base for WaveProcessNode.
+ *
  * @author Nipun Balan Thekkummal
  * @version 1.0
  */
@@ -31,8 +32,7 @@ public class Node {
 
 	//
 	/**
-	 * Constructor takes the nodeID and creates an empty ArrayList to store
-	 * children.
+	 * Constructor takes the nodeID and creates an empty ArrayList to store neighbour.
 	 *
 	 * @param ID
 	 *            The node ID for the new node
